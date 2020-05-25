@@ -1,0 +1,78 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using ProiectMDS.DTOs;
+using ProiectMDS.Models;
+using ProiectMDS.Repositories.ProviderRepository;
+
+namespace ProiectMDS.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ProviderController : ControllerBase
+    {
+        public IProviderRepository IProviderRepository { get; set; }
+
+        public ProviderController(IProviderRepository repository)
+        {
+            IProviderRepository = repository;
+        }
+        // GET: api/Provider
+        [HttpGet]
+        public ActionResult<IEnumerable<Provider>> Get()
+        {
+            return IProviderRepository.GetAll();
+        }
+
+        // GET: api/Provider/5
+        [HttpGet("{id}")]
+        public ActionResult<Provider> Get(int id)
+        {
+            return IProviderRepository.Get(id);
+        }
+
+        // POST: api/Provider
+        [HttpPost]
+        public Provider Post(ProviderDTO value)
+        {
+            Provider model = new Provider()
+            {
+                Name = value.Name,
+                Email = value.Email,
+                Tel = value.Tel
+            };
+            return IProviderRepository.Create(model);
+        }
+
+        // PUT: api/Provider/5
+        [HttpPut("{id}")]
+        public Provider Put(int id, ProviderDTO value)
+        {
+            Provider model = IProviderRepository.Get(id);
+            if (value.Name != null)
+            {
+                model.Name = value.Name;
+            }
+            if (value.Email != null)
+            {
+                model.Email = value.Email;
+            }
+            if (value.Tel != null)
+            {
+                model.Tel = value.Tel;
+            }
+            return IProviderRepository.Update(model);
+        }
+
+        // DELETE: api/ApiWithActions/5
+        [HttpDelete("{id}")]
+        public Provider Delete(int id)
+        {
+            Provider provider = IProviderRepository.Get(id);
+            return IProviderRepository.Delete(provider);
+        }
+    }
+}
